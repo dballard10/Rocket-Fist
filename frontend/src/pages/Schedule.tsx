@@ -1,3 +1,29 @@
+/**
+ * @file Schedule.tsx
+ * @description Weekly class schedule management page for the Staff Portal.
+ * Displays a calendar view of scheduled class instances and allows staff to
+ * view registrations, manage capacity, and check in members.
+ *
+ * @portal Staff
+ * @roles owner (full access), employee (full access), coach (read access)
+ * @route /schedule
+ *
+ * @features
+ * - Week-based navigation (previous/next week, "Go to today")
+ * - Mobile: Vertical daily list view
+ * - Desktop: 7-day grid calendar view
+ * - Click class to view details modal with:
+ *   - Date, time, coach, capacity info
+ *   - Registration list with status badges
+ *   - Check-in functionality for upcoming classes
+ *   - Edit capacity option
+ *   - Cancel class action (upcoming only)
+ *
+ * @data
+ * - Currently uses mockClassInstances (to be replaced with Supabase 'classes' table)
+ * - Mock registrations derived from mockMembers
+ */
+
 import { useState, useMemo } from "react";
 import WidgetCard from "../components/WidgetCard";
 import Button from "../components/ui/Button";

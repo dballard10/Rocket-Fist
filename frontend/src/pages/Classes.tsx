@@ -1,3 +1,29 @@
+/**
+ * @file Classes.tsx
+ * @description Class template management page for the Staff Portal. Allows staff
+ * to create, edit, and manage class templates (not individual class instances).
+ * Each class template defines the name, discipline, skill level, duration, and
+ * default coach.
+ *
+ * @portal Staff
+ * @roles owner (full access), employee (full access)
+ * @route /classes
+ *
+ * @features
+ * - View all class templates in table (desktop) or card (mobile) format
+ * - Create new class templates via modal form
+ * - Edit existing class templates
+ * - Activate/deactivate class templates
+ * - Fields: name, description, discipline, skill level, duration, default coach
+ *
+ * @note
+ * Class templates are different from class instances (scheduled occurrences).
+ * Use the Schedule page to view/manage specific class instances.
+ *
+ * @data
+ * - Currently uses mockData (to be replaced with Supabase 'class_types' table)
+ */
+
 import { useState } from "react";
 import WidgetCard from "../components/WidgetCard";
 import Button from "../components/ui/Button";
@@ -5,6 +31,7 @@ import Modal from "../components/ui/Modal";
 import Input from "../components/ui/Input";
 import TextArea from "../components/ui/TextArea";
 import Select from "../components/ui/Select";
+import StatusBadge from "../components/ui/StatusBadge";
 import type { Class } from "../data/mockData";
 import { mockClasses, mockCoaches } from "../data/mockData";
 
@@ -159,15 +186,9 @@ export default function Classes() {
                     {classItem.discipline}
                   </p>
                 </div>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    classItem.isActive
-                      ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-gray-500/20 text-gray-400"
-                  }`}
-                >
-                  {classItem.isActive ? "Active" : "Inactive"}
-                </span>
+                <StatusBadge
+                  status={classItem.isActive ? "active" : "inactive"}
+                />
               </div>
 
               <div className="flex items-center gap-3 text-sm text-gray-400 mb-3">
@@ -255,15 +276,9 @@ export default function Classes() {
                     {classItem.defaultCoach}
                   </td>
                   <td className="py-3 px-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        classItem.isActive
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-gray-500/20 text-gray-400"
-                      }`}
-                    >
-                      {classItem.isActive ? "Active" : "Inactive"}
-                    </span>
+                    <StatusBadge
+                      status={classItem.isActive ? "active" : "inactive"}
+                    />
                   </td>
                   <td className="py-3 px-3">
                     <div className="flex justify-end gap-2">

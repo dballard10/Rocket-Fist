@@ -1,9 +1,42 @@
+/**
+ * @file MemberRow.tsx
+ * @description Table row component for displaying a single member in the desktop
+ * member list. Includes an action menu with view, edit, and status change options.
+ *
+ * @portal Staff
+ * @roles owner, employee, coach (all staff roles)
+ * @usage Used by MemberList component (desktop table view only)
+ *
+ * @features
+ * - Avatar with member initials
+ * - Name and email display
+ * - Membership plan column
+ * - Status badge
+ * - Next billing date (formatted)
+ * - Last check-in date (relative format, e.g., "2 days ago")
+ * - Action menu with:
+ *   - View details
+ *   - Edit member
+ *   - Mark as delinquent
+ * - Click anywhere on row to select member
+ * - Click-outside to close action menu
+ *
+ * @props
+ * @param {Member} member - The member object to display
+ * @param {(member: Member) => void} onSelect - Callback when row is clicked
+ */
+
 import { useState, useRef, useEffect } from 'react';
 import type { Member } from '../../types/members';
 import StatusBadge from '../ui/StatusBadge';
 
+/**
+ * Props for the MemberRow component.
+ */
 interface MemberRowProps {
+  /** The member object to display in this row */
   member: Member;
+  /** Callback fired when the row is clicked */
   onSelect: (member: Member) => void;
 }
 

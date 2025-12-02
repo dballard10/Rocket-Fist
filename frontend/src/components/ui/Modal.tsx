@@ -1,10 +1,48 @@
+/**
+ * @file Modal.tsx
+ * @description Reusable modal dialog component with backdrop, header, and content area.
+ * Supports multiple sizes and handles escape key and click-outside to close.
+ *
+ * @portal Both (Staff and Member)
+ * @usage Core UI component for dialogs, forms, and confirmations
+ *
+ * @features
+ * - Blurred dark backdrop
+ * - Header with title and close button
+ * - Scrollable content area
+ * - Escape key to close
+ * - Click backdrop to close
+ * - Body scroll lock when open
+ * - Mobile: slides up from bottom (rounded top)
+ * - Desktop: centered with zoom animation
+ *
+ * @sizes
+ * - sm: max-w-sm (384px)
+ * - md: max-w-md (448px) - default
+ * - lg: max-w-lg (512px)
+ * - xl: max-w-xl (576px)
+ *
+ * @example
+ * <Modal isOpen={isOpen} onClose={handleClose} title="Add Member" size="md">
+ *   <form>...</form>
+ * </Modal>
+ */
+
 import { useEffect, useRef } from "react";
 
+/**
+ * Props for the Modal component.
+ */
 interface ModalProps {
+  /** Whether the modal is currently visible */
   isOpen: boolean;
+  /** Callback fired when the modal should close */
   onClose: () => void;
+  /** Title displayed in the modal header */
   title: string;
+  /** Modal content */
   children: React.ReactNode;
+  /** Width size of the modal */
   size?: "sm" | "md" | "lg" | "xl";
 }
 
@@ -88,4 +126,6 @@ export default function Modal({
     </div>
   );
 }
+
+
 

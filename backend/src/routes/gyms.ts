@@ -10,3 +10,5 @@ export async function gymsRoutes(app: FastifyInstance): Promise<void> {
 }
 
 
+
+

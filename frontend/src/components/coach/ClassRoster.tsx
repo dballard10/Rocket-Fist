@@ -1,11 +1,48 @@
+/**
+ * @file ClassRoster.tsx
+ * @description Class roster panel component for the Coach page. Displays the list
+ * of members registered for a selected class with check-in controls. Coaches use
+ * this to mark members present as they arrive for class.
+ *
+ * @portal Staff
+ * @roles coach (primary), owner
+ * @usage Used in Coach.tsx (pages/Coach.tsx)
+ *
+ * @features
+ * - Class header with name, time range, and location
+ * - Statistics cards: Reserved, Checked In, Remaining counts
+ * - Roster list with:
+ *   - Member avatar with initials
+ *   - Name and status badge (Reserved/Checked in)
+ *   - "Mark present" button for reserved members
+ *   - Loading spinner during check-in update
+ * - Empty state when no class selected
+ * - Loading skeleton state
+ *
+ * @props
+ * @param {ClassSummary | null} classSummary - Selected class details (null shows empty state)
+ * @param {ClassRosterEntry[]} roster - Array of member reservations for the class
+ * @param {boolean} isLoading - Whether roster data is being fetched
+ * @param {(reservationId: string) => void} onMarkPresent - Callback when marking member present
+ * @param {string | null} updatingReservationId - ID of reservation currently being updated
+ */
+
 import type { ClassSummary, ClassRosterEntry } from '../../types/classes';
 import Button from '../ui/Button';
 
+/**
+ * Props for the ClassRoster component.
+ */
 interface ClassRosterProps {
+  /** Selected class details, or null if no class selected */
   classSummary: ClassSummary | null;
+  /** Array of member reservations for the selected class */
   roster: ClassRosterEntry[];
+  /** Whether the roster is currently loading */
   isLoading: boolean;
+  /** Callback fired when coach clicks "Mark present" for a member */
   onMarkPresent: (reservationId: string) => void;
+  /** ID of the reservation currently being updated (shows loading state) */
   updatingReservationId: string | null;
 }
 
@@ -193,5 +230,7 @@ export default function ClassRoster({
     </div>
   );
 }
+
+
 
 

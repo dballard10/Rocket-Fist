@@ -32,13 +32,18 @@ export function getDevEmails(): string[] {
 /**
  * Check if a user is an authorized developer who can see the role switcher.
  * 
- * Returns true only if:
- * 1. VITE_ENABLE_DEV_SWITCHER === 'true'
- * 2. User's email is in the VITE_DEV_EMAILS allowlist
+ * Returns true if:
+ * 1. In development mode (import.meta.env.DEV), OR
+ * 2. VITE_ENABLE_DEV_SWITCHER === 'true' AND User's email is in VITE_DEV_EMAILS allowlist
  * 
  * @param user - User object with email property
  */
 export function isDeveloperUser(user: UserLike | null | undefined): boolean {
+  // Always show in development mode for easier testing
+  if (import.meta.env.DEV) {
+    return true;
+  }
+
   // Must have the feature flag enabled
   if (!isDevSwitcherEnabled()) {
     return false;
@@ -55,5 +60,6 @@ export function isDeveloperUser(user: UserLike | null | undefined): boolean {
 
   return devEmails.includes(userEmail);
 }
+
 
 

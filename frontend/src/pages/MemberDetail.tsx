@@ -1,3 +1,30 @@
+/**
+ * @file MemberDetail.tsx
+ * @description Individual member detail page showing comprehensive member information
+ * in a tabbed interface. Displays profile, membership details, attendance history,
+ * and payment history.
+ *
+ * @portal Staff
+ * @roles owner, employee, coach (all with full read access)
+ * @route /members/:id
+ *
+ * @features
+ * - Member header with avatar, name, status badge
+ * - Tabbed interface with 4 sections:
+ *   - Profile: Contact info, join date, emergency contact, notes
+ *   - Membership: Plan details, status, billing date, Stripe ID
+ *   - Attendance: Recent class attendance records
+ *   - Payments: Payment history with status indicators
+ * - Edit and Freeze actions (stubbed)
+ * - Responsive mobile/desktop layouts
+ *
+ * @params
+ * - id: Member ID from URL parameter
+ *
+ * @data
+ * - Currently uses mockData (to be replaced with Supabase queries)
+ */
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import WidgetCard from "../components/WidgetCard";
@@ -420,4 +447,6 @@ export default function MemberDetail() {
     </div>
   );
 }
+
+
 

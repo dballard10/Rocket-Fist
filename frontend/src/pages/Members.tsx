@@ -1,3 +1,33 @@
+/**
+ * @file Members.tsx
+ * @description Member management page for the Staff Portal. Allows staff to view,
+ * search, filter, and manage gym members. Coaches have read-only access while
+ * owners and employees can add new members.
+ *
+ * @portal Staff
+ * @roles owner (full access), employee (full access), coach (read-only)
+ * @route /members
+ *
+ * @features
+ * - KPI cards showing member statistics (total, active, delinquent, new this month)
+ * - Search by name or email
+ * - Filter by membership status (active, frozen, cancelled, etc.)
+ * - Filter by membership plan
+ * - Member list with click-to-view details
+ * - Add new member modal (owner/employee only)
+ * - Member details slide-over sheet
+ *
+ * @components
+ * - MemberFilters: Search and filter controls
+ * - MemberList: Responsive table/list of members
+ * - MemberDetailsSheet: Slide-over panel showing member details
+ * - AddMemberModal: Modal form for creating new members
+ *
+ * @data
+ * - Fetches from Supabase 'members' table
+ * - Falls back to mock data if Supabase unavailable
+ */
+
 import { useState, useMemo, useEffect } from "react";
 import WidgetCard from "../components/WidgetCard";
 import Button from "../components/ui/Button";
@@ -7,6 +37,7 @@ import MemberDetailsSheet from "../components/members/MemberDetailsSheet";
 import AddMemberModal from "../components/members/AddMemberModal";
 import type { Member, MemberFormData } from "../types/members";
 import { supabase } from "../lib/supabase/client";
+import { useDevRole } from "../lib/devRoleMode";
 
 // Temporary mock data for development (remove when Supabase is connected)
 const mockMembersData: Member[] = [
@@ -78,24 +109,36 @@ const mockMembersData: Member[] = [
     phone: "(555) 678-9012",
     status: "delinquent",
     membership_plan: "Unlimited Training",
-    next_billing_date: "2024-12-10",
-    last_check_in_at: "2024-12-15",
+    next_billing_date: null,
+    last_check_in_at: "2024-12-08",
     created_at: "2024-09-01T10:00:00Z",
   },
   {
     id: "7",
+    first_name: "Chris",
+    last_name: "Jones",
+    email: "chris.j@email.com",
+    phone: "(555) 789-0123",
+    status: "new",
+    membership_plan: "Unlimited Training",
+    next_billing_date: "2025-12-30",
+    last_check_in_at: "2025-11-30",
+    created_at: "2023-05-15T10:00:00Z",
+  },
+  {
+    id: "8",
     first_name: "Sam",
     last_name: "Johnson",
     email: "sam.j@email.com",
     phone: "(555) 789-0123",
     status: "active",
     membership_plan: "Drop-In",
-    next_billing_date: null,
+    next_billing_date: "2025-12-23",
     last_check_in_at: "2024-12-31",
     created_at: "2024-12-01T10:00:00Z",
   },
   {
-    id: "8",
+    id: "9",
     first_name: "Taylor",
     last_name: "Brown",
     email: "taylor.b@email.com",
@@ -144,6 +187,10 @@ function KPICard({ title, value, icon, color = "default" }: KPICardProps) {
 }
 
 export default function Members() {
+  const { viewRole } = useDevRole();
+  const isCoach = viewRole === "coach";
+  const canManageMembers = viewRole === "owner" || viewRole === "employee";
+
   const [members, setMembers] = useState<Member[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -160,6 +207,8 @@ export default function Members() {
 
   // Fetch members from Supabase
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchMembers() {
       setIsLoading(true);
       setError(null);
@@ -171,26 +220,46 @@ export default function Members() {
           .select("*")
           .order("created_at", { ascending: false });
 
+        if (!isMounted) return;
+
         if (supabaseError) {
           console.warn(
             "Supabase fetch failed, using mock data:",
             supabaseError
           );
           // Fall back to mock data if Supabase is not configured
-          setMembers(mockMembersData);
+          // Deduplicate by ID to prevent duplicates
+          const uniqueMembers = Array.from(
+            new Map(mockMembersData.map((m) => [m.id, m])).values()
+          );
+          setMembers(uniqueMembers);
         } else {
-          setMembers(data || []);
+          // Deduplicate by ID to prevent duplicates
+          const uniqueMembers = Array.from(
+            new Map((data || []).map((m: Member) => [m.id, m])).values()
+          );
+          setMembers(uniqueMembers);
         }
       } catch (err) {
+        if (!isMounted) return;
         console.warn("Failed to fetch members, using mock data:", err);
-        // Fall back to mock data
-        setMembers(mockMembersData);
+        // Fall back to mock data - deduplicate by ID
+        const uniqueMembers = Array.from(
+          new Map(mockMembersData.map((m) => [m.id, m])).values()
+        );
+        setMembers(uniqueMembers);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
 
     fetchMembers();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Get unique plans from members
@@ -271,7 +340,12 @@ export default function Members() {
       created_at: new Date().toISOString(),
     };
 
-    setMembers((prev) => [newMember, ...prev]);
+    // Deduplicate by ID when adding new member
+    setMembers((prev) => {
+      const existing = new Map(prev.map((m) => [m.id, m]));
+      existing.set(newMember.id, newMember);
+      return Array.from(existing.values());
+    });
   };
 
   return (
@@ -279,35 +353,43 @@ export default function Members() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Members</h1>
-        <Button
-          onClick={() => setAddModalOpen(true)}
-          icon={
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-          }
-        >
-          Add Member
-        </Button>
+        {canManageMembers && (
+          <Button
+            onClick={() => setAddModalOpen(true)}
+            icon={
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+            }
+          >
+            Add Member
+          </Button>
+        )}
       </div>
 
       {/* Subtitle */}
       <p className="text-gray-400 mb-6">
-        Manage all members, memberships, and attendance.
+        {isCoach
+          ? "View members who attend your classes."
+          : "Manage all members, memberships, and attendance."}
       </p>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div
+        className={`grid grid-cols-2 ${
+          isCoach ? "lg:grid-cols-2" : "lg:grid-cols-4"
+        } gap-4 mb-6`}
+      >
         <KPICard
           title="Total Members"
           value={kpis.totalMembers}
@@ -348,46 +430,51 @@ export default function Members() {
             </svg>
           }
         />
-        <KPICard
-          title="Delinquent"
-          value={kpis.delinquentMembers}
-          color="red"
-          icon={
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-          }
-        />
-        <KPICard
-          title="New This Month"
-          value={kpis.newThisMonth}
-          color="blue"
-          icon={
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
-          }
-        />
+        {/* Delinquent - hide from coaches (billing related) */}
+        {!isCoach && (
+          <KPICard
+            title="Delinquent"
+            value={kpis.delinquentMembers}
+            color="red"
+            icon={
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            }
+          />
+        )}
+        {!isCoach && (
+          <KPICard
+            title="New This Month"
+            value={kpis.newThisMonth}
+            color="blue"
+            icon={
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+            }
+          />
+        )}
       </div>
 
       {/* Error state */}
@@ -425,12 +512,14 @@ export default function Members() {
         onOpenChange={setDetailsOpen}
       />
 
-      {/* Add Member Modal */}
-      <AddMemberModal
-        isOpen={addModalOpen}
-        onClose={() => setAddModalOpen(false)}
-        onSubmit={handleAddMember}
-      />
+      {/* Add Member Modal - only for users who can manage members */}
+      {canManageMembers && (
+        <AddMemberModal
+          isOpen={addModalOpen}
+          onClose={() => setAddModalOpen(false)}
+          onSubmit={handleAddMember}
+        />
+      )}
     </div>
   );
 }

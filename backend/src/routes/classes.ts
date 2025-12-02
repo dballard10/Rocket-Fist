@@ -7,3 +7,5 @@ export async function classesRoutes(app: FastifyInstance): Promise<void> {
 }
 
 
+
+

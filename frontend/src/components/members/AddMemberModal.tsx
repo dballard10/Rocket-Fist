@@ -1,12 +1,45 @@
-import { useState } from 'react';
-import Modal from '../ui/Modal';
-import Input from '../ui/Input';
-import Button from '../ui/Button';
-import type { MemberFormData } from '../../types/members';
+/**
+ * @file AddMemberModal.tsx
+ * @description Modal form for adding new gym members. Used by staff to create
+ * member records with basic information. Includes client-side validation.
+ *
+ * @portal Staff
+ * @roles owner, employee (coaches have read-only member access)
+ * @usage Used in Members.tsx (pages/Members.tsx)
+ *
+ * @features
+ * - Modal overlay with form
+ * - Fields: first name, last name, email (all required)
+ * - Client-side validation with error messages
+ * - Loading state during submission
+ * - Form reset on close
+ *
+ * @props
+ * @param {boolean} isOpen - Whether the modal is visible
+ * @param {() => void} onClose - Callback when modal is closed
+ * @param {(data: MemberFormData) => void} onSubmit - Callback with form data on submission
+ *
+ * @todo
+ * - Connect to Supabase for actual member creation
+ * - Add phone number and membership plan fields
+ * - Add email verification or invite flow
+ */
 
+import { useState } from "react";
+import Modal from "../ui/Modal";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import type { MemberFormData } from "../../types/members";
+
+/**
+ * Props for the AddMemberModal component.
+ */
 interface AddMemberModalProps {
+  /** Whether the modal is currently visible */
   isOpen: boolean;
+  /** Callback fired when the modal is closed (cancel or backdrop click) */
   onClose: () => void;
+  /** Callback fired with form data when the form is submitted */
   onSubmit: (data: MemberFormData) => void;
 }
 
@@ -22,9 +55,9 @@ export default function AddMemberModal({
   onSubmit,
 }: AddMemberModalProps) {
   const [formData, setFormData] = useState<MemberFormData>({
-    first_name: '',
-    last_name: '',
-    email: '',
+    first_name: "",
+    last_name: "",
+    email: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,17 +66,17 @@ export default function AddMemberModal({
     const newErrors: FormErrors = {};
 
     if (!formData.first_name.trim()) {
-      newErrors.first_name = 'First name is required';
+      newErrors.first_name = "First name is required";
     }
 
     if (!formData.last_name.trim()) {
-      newErrors.last_name = 'Last name is required';
+      newErrors.last_name = "Last name is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     setErrors(newErrors);
@@ -79,13 +112,18 @@ export default function AddMemberModal({
   };
 
   const handleClose = () => {
-    setFormData({ first_name: '', last_name: '', email: '' });
+    setFormData({ first_name: "", last_name: "", email: "" });
     setErrors({});
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="Add New Member" size="md">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Add New Member"
+      size="md"
+    >
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -93,7 +131,8 @@ export default function AddMemberModal({
             value={formData.first_name}
             onChange={(value) => {
               setFormData({ ...formData, first_name: value });
-              if (errors.first_name) setErrors({ ...errors, first_name: undefined });
+              if (errors.first_name)
+                setErrors({ ...errors, first_name: undefined });
             }}
             placeholder="John"
             required
@@ -104,7 +143,8 @@ export default function AddMemberModal({
             value={formData.last_name}
             onChange={(value) => {
               setFormData({ ...formData, last_name: value });
-              if (errors.last_name) setErrors({ ...errors, last_name: undefined });
+              if (errors.last_name)
+                setErrors({ ...errors, last_name: undefined });
             }}
             placeholder="Doe"
             required
@@ -161,7 +201,7 @@ export default function AddMemberModal({
                 Adding...
               </span>
             ) : (
-              'Add Member'
+              "Add Member"
             )}
           </Button>
         </div>
@@ -169,5 +209,3 @@ export default function AddMemberModal({
     </Modal>
   );
 }
-
-

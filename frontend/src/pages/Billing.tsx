@@ -1,3 +1,32 @@
+/**
+ * @file Billing.tsx
+ * @description Billing and payments management page for the Staff Portal.
+ * Displays payment summaries and transaction history with filtering capabilities.
+ * This page is restricted to gym owners only.
+ *
+ * @portal Staff
+ * @roles owner (exclusive access)
+ * @route /billing
+ *
+ * @features
+ * - Summary cards showing:
+ *   - Total collected payments
+ *   - Failed payment amounts
+ *   - Refunded amounts
+ * - Payment history table with:
+ *   - Date, member name, description, amount, status
+ *   - Search by member name
+ *   - Filter by payment status (succeeded, failed, refunded)
+ * - Responsive mobile card / desktop table views
+ *
+ * @note
+ * Payment processing is handled via Stripe integration.
+ * This page is for viewing/reporting only.
+ *
+ * @data
+ * - Currently uses mockPayments (to be replaced with Stripe webhook data)
+ */
+
 import { useState, useMemo } from "react";
 import WidgetCard from "../components/WidgetCard";
 import SearchInput from "../components/ui/SearchInput";

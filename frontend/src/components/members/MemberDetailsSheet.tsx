@@ -1,11 +1,44 @@
+/**
+ * @file MemberDetailsSheet.tsx
+ * @description Slide-over sheet component displaying detailed member information.
+ * Opens from the right side of the screen when a member is selected from the list.
+ * Shows basic info, membership details, and activity summary.
+ *
+ * @portal Staff
+ * @roles owner, employee, coach (all staff roles)
+ * @usage Used in Members.tsx (pages/Members.tsx)
+ *
+ * @features
+ * - Slide-over panel from right edge
+ * - Click-away to close (no visible backdrop)
+ * - Escape key to close
+ * - Header with avatar, name, status badge
+ * - Sections:
+ *   - Basic Information: full name, email, phone, member since
+ *   - Membership: plan, status, next billing date
+ *   - Activity: last check-in, visits this month
+ * - Footer actions: Edit Member, View Full History
+ *
+ * @props
+ * @param {Member | null} member - The member to display, or null when closed
+ * @param {boolean} open - Whether the sheet is visible
+ * @param {(open: boolean) => void} onOpenChange - Callback when open state changes
+ */
+
 import { useEffect } from "react";
 import type { Member } from "../../types/members";
 import StatusBadge from "../ui/StatusBadge";
 import Button from "../ui/Button";
 
+/**
+ * Props for the MemberDetailsSheet component.
+ */
 interface MemberDetailsSheetProps {
+  /** The member to display, or null if no member selected */
   member: Member | null;
+  /** Whether the sheet is currently visible */
   open: boolean;
+  /** Callback fired when the sheet should open or close */
   onOpenChange: (open: boolean) => void;
 }
 

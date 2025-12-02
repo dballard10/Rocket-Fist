@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ViewRole = 'owner' | 'coach' | 'member';
+export type ViewRole = 'owner' | 'coach' | 'employee' | 'member';
 
 interface DevRoleContextValue {
   /** Current view role override */
@@ -11,6 +11,10 @@ interface DevRoleContextValue {
   setViewRole: (role: ViewRole) => void;
   /** Enable/disable dev mode override */
   setIsDevMode: (value: boolean) => void;
+  /** Whether the dev sheet is open (persists across layout changes) */
+  isDevSheetOpen: boolean;
+  /** Open/close the dev sheet */
+  setIsDevSheetOpen: (value: boolean) => void;
 }
 
 const DevRoleContext = createContext<DevRoleContextValue | null>(null);
@@ -30,7 +34,7 @@ export function DevRoleProvider({ children }: DevRoleProviderProps) {
   const [viewRole, setViewRoleState] = useState<ViewRole>(() => {
     if (typeof window === 'undefined') return 'owner';
     const stored = localStorage.getItem(STORAGE_KEY_ROLE);
-    if (stored === 'owner' || stored === 'coach' || stored === 'member') {
+    if (stored === 'owner' || stored === 'coach' || stored === 'employee' || stored === 'member') {
       return stored;
     }
     return 'owner';
@@ -40,6 +44,9 @@ export function DevRoleProvider({ children }: DevRoleProviderProps) {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem(STORAGE_KEY_ENABLED) === 'true';
   });
+
+  // Dev sheet open state - persists across layout changes
+  const [isDevSheetOpen, setIsDevSheetOpen] = useState(false);
 
   // Persist role to localStorage
   const setViewRole = (role: ViewRole) => {
@@ -58,6 +65,8 @@ export function DevRoleProvider({ children }: DevRoleProviderProps) {
     isDevMode,
     setViewRole,
     setIsDevMode,
+    isDevSheetOpen,
+    setIsDevSheetOpen,
   };
 
   return (
@@ -99,9 +108,19 @@ export function getRoleInfo(role: ViewRole): { label: string; color: string; bgC
       return { label: 'Owner', color: 'text-purple-400', bgColor: 'bg-purple-500/20' };
     case 'coach':
       return { label: 'Coach', color: 'text-blue-400', bgColor: 'bg-blue-500/20' };
+    case 'employee':
+      return { label: 'Employee', color: 'text-amber-400', bgColor: 'bg-amber-500/20' };
     case 'member':
       return { label: 'Member', color: 'text-emerald-400', bgColor: 'bg-emerald-500/20' };
   }
 }
+
+/**
+ * Check if a role is a staff role (not a member).
+ */
+export function isStaffRole(role: ViewRole): boolean {
+  return role === 'owner' || role === 'coach' || role === 'employee';
+}
+
 
 

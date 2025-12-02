@@ -1,8 +1,36 @@
+/**
+ * @file TodayClassRow.tsx
+ * @description Individual class row component for the Coach page class list.
+ * Displays class information in a clickable card format with selection styling.
+ *
+ * @portal Staff
+ * @roles coach (primary), owner
+ * @usage Used by TodayClassesList component
+ *
+ * @features
+ * - Class name, time range, and location display
+ * - Reserved and Checked In counts
+ * - Selection indicator (red border and background when selected)
+ * - Hover state with subtle background change
+ * - Chevron icon indicating expandability
+ *
+ * @props
+ * @param {ClassSummary} classSummary - The class data to display
+ * @param {boolean} isSelected - Whether this row is currently selected
+ * @param {() => void} onSelect - Callback when the row is clicked
+ */
+
 import type { ClassSummary } from '../../types/classes';
 
+/**
+ * Props for the TodayClassRow component.
+ */
 interface TodayClassRowProps {
+  /** Class summary data to display */
   classSummary: ClassSummary;
+  /** Whether this row is currently selected */
   isSelected: boolean;
+  /** Callback fired when the row is clicked */
   onSelect: () => void;
 }
 
@@ -71,5 +99,7 @@ export default function TodayClassRow({
     </button>
   );
 }
+
+
 
 

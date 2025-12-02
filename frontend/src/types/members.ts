@@ -1,4 +1,9 @@
-export type MemberStatus = 'active' | 'frozen' | 'cancelled' | 'delinquent';
+export type MemberStatus =
+  | "active"
+  | "frozen"
+  | "cancelled"
+  | "delinquent"
+  | "new";
 
 export interface Member {
   id: string;
@@ -20,5 +25,3 @@ export interface MemberFormData {
   phone?: string;
   membership_plan?: string;
 }
-
-

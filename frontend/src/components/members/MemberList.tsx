@@ -1,10 +1,40 @@
+/**
+ * @file MemberList.tsx
+ * @description Responsive member list component displaying gym members in either
+ * a table (desktop) or card (mobile) format. Includes loading skeletons and
+ * empty state handling.
+ *
+ * @portal Staff
+ * @roles owner, employee, coach (all staff roles)
+ * @usage Used in Members.tsx (pages/Members.tsx)
+ *
+ * @features
+ * - Mobile view: Card layout with avatar, name, plan, status
+ * - Desktop view: Table with columns for member, plan, status, billing, check-in
+ * - Loading state with skeleton placeholders
+ * - Empty state when no members match filters
+ * - Click row/card to select member
+ * - Uses MemberRow for desktop table rows
+ *
+ * @props
+ * @param {Member[]} members - Array of member objects to display
+ * @param {boolean} isLoading - Whether data is currently loading
+ * @param {(member: Member) => void} onSelect - Callback when a member is clicked
+ */
+
 import type { Member } from '../../types/members';
 import MemberRow from './MemberRow';
 import StatusBadge from '../ui/StatusBadge';
 
+/**
+ * Props for the MemberList component.
+ */
 interface MemberListProps {
+  /** Array of member objects to display */
   members: Member[];
+  /** Whether the member list is currently loading */
   isLoading: boolean;
+  /** Callback fired when a member row/card is clicked */
   onSelect: (member: Member) => void;
 }
 
