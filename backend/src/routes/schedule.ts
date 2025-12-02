@@ -6,3 +6,4 @@ export async function scheduleRoutes(app: FastifyInstance): Promise<void> {
   app.get('/gyms/:gymId/schedule', getSchedule);
 }
 
+

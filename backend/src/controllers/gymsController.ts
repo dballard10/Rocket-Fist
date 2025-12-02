@@ -52,3 +52,4 @@ export async function getGym(
   return reply.send(data as Gym);
 }
 
+

@@ -8,3 +8,4 @@ export const supabase = createClient(config.supabaseUrl, config.supabaseServiceR
   },
 });
 
+

@@ -81,3 +81,4 @@ export async function getSchedule(
   return reply.send(data as ClassInstance[]);
 }
 
+

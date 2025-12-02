@@ -6,3 +6,4 @@ export async function classesRoutes(app: FastifyInstance): Promise<void> {
   app.get('/gyms/:gymId/classes', listClasses);
 }
 
+

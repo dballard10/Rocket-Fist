@@ -9,3 +9,4 @@ export async function gymsRoutes(app: FastifyInstance): Promise<void> {
   app.get('/gyms/:gymId', getGym);
 }
 
+

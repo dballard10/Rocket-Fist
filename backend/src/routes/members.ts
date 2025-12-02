@@ -12,3 +12,4 @@ export async function membersRoutes(app: FastifyInstance): Promise<void> {
   app.get('/gyms/:gymId/stats/revenue', getRevenueStats);
 }
 
+

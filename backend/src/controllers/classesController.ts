@@ -43,3 +43,4 @@ export async function listClasses(
   return reply.send(data as ClassTemplate[]);
 }
 
+
