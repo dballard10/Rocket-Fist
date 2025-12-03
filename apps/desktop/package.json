@@ -1,0 +1,38 @@
+{
+  "name": "@rocket-fist/desktop",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Rocket Fist Desktop App (Electron)",
+  "main": "dist/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "build:main": "tsc -p tsconfig.json",
+    "dev": "npm run build:main && electron .",
+    "build": "npm run build:main && electron-builder"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "~5.9.3"
+  },
+  "build": {
+    "appId": "com.rocketfist.app",
+    "productName": "Rocket Fist",
+    "directories": {
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web"
+      }
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

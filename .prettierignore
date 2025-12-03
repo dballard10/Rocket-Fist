@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+.git
+*.lock
+pnpm-lock.yaml
+package-lock.json
+

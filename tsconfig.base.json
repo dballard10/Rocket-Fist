@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rocket-fist/domain": ["packages/domain/src"],
+      "@rocket-fist/domain/*": ["packages/domain/src/*"],
+      "@rocket-fist/ui": ["packages/ui/src"],
+      "@rocket-fist/ui/*": ["packages/ui/src/*"],
+      "@rocket-fist/api-client": ["packages/api-client/src"],
+      "@rocket-fist/api-client/*": ["packages/api-client/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build"]
+}
+

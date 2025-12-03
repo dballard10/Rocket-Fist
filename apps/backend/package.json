@@ -1,0 +1,27 @@
+{
+  "name": "@rocket-fist/backend",
+  "version": "0.0.1",
+  "description": "Rocket Fist Backend API",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "seed": "ts-node scripts/seedMockData.ts"
+  },
+  "dependencies": {
+    "@rocket-fist/domain": "*",
+    "@fastify/cors": "^10.0.1",
+    "@supabase/supabase-js": "^2.47.10",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2"
+  }
+}
+

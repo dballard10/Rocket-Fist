@@ -1,0 +1,10 @@
+{
+  "name": "@rocket-fist/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Rocket Fist Mobile App (React Native/Expo - Coming Soon)",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
+
