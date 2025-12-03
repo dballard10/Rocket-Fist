@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { DevRoleProvider, useDevRole, isStaffRole } from "./lib/devRoleMode";
 
 // Layouts
@@ -7,23 +12,18 @@ import MemberLayout from "./layouts/MemberLayout";
 
 // Staff Pages (existing)
 import Dashboard from "./components/Dashboard";
-import Members from "./pages/Members";
 import MemberDetail from "./pages/MemberDetail";
-import Classes from "./pages/Classes";
-import Schedule from "./pages/Schedule";
-import Billing from "./pages/Billing";
-import Coach from "./pages/Coach";
 
-// Member Pages (to be created)
-import MemberHome from "./pages/member/Home";
-import MemberSchedule from "./pages/member/Schedule";
-import Membership from "./pages/member/Membership";
-import MemberAccount from "./pages/member/Account";
+// Member Pages
+import MemberDashboard from "./pages/member/Dashboard";
+import MemberClasses from "./pages/member/Classes";
+import MemberSettings from "./pages/member/Settings";
 
-// Placeholder pages for new staff routes
-import Attendance from "./pages/staff/Attendance";
+// Staff Hub Pages (consolidated navigation)
+import ClassesHub from "./pages/staff/ClassesHub";
+import MembersHub from "./pages/staff/MembersHub";
+import SettingsHub from "./pages/staff/SettingsHub";
 import CheckIns from "./pages/staff/CheckIns";
-import Settings from "./pages/staff/Settings";
 import StaffAccount from "./pages/staff/Account";
 
 /**
@@ -31,21 +31,29 @@ import StaffAccount from "./pages/staff/Account";
  */
 function RoleBasedRouter() {
   const { viewRole, isDevMode } = useDevRole();
-  
+
   // In dev mode, use the selected viewRole. In production, this would come from auth.
   const effectiveRole = isDevMode ? viewRole : viewRole; // Replace with actual auth role in production
-  
+
   // If member role, show member portal
   if (!isStaffRole(effectiveRole)) {
     return (
       <Routes>
         <Route element={<MemberLayout />}>
-          <Route path="/" element={<MemberHome />} />
-          <Route path="/schedule" element={<MemberSchedule />} />
-          <Route path="/membership" element={<Membership />} />
-          <Route path="/account" element={<MemberAccount />} />
-          {/* Catch-all redirect to home for members */}
-          <Route path="*" element={<MemberHome />} />
+          <Route path="/" element={<MemberDashboard />} />
+          <Route path="/schedule" element={<MemberClasses />} />
+          <Route path="/settings" element={<MemberSettings />} />
+          {/* Legacy route redirects for backwards compatibility */}
+          <Route
+            path="/membership"
+            element={<Navigate to="/settings?tab=membership" replace />}
+          />
+          <Route
+            path="/account"
+            element={<Navigate to="/settings?tab=account" replace />}
+          />
+          {/* Catch-all redirect to dashboard for members */}
+          <Route path="*" element={<MemberDashboard />} />
         </Route>
       </Routes>
     );
@@ -57,25 +65,38 @@ function RoleBasedRouter() {
       <Route element={<StaffLayout />}>
         {/* Owner-specific routes */}
         <Route path="/" element={<Dashboard />} />
-        <Route path="/billing" element={<Billing />} />
-        <Route path="/settings" element={<Settings />} />
-        
-        {/* Coach-specific routes */}
-        <Route path="/my-classes" element={<Coach />} />
-        
+
         {/* Employee-specific routes */}
         <Route path="/check-ins" element={<CheckIns />} />
-        
-        {/* Shared staff routes */}
-        <Route path="/members" element={<Members />} />
+
+        {/* Consolidated hub pages with tabs */}
+        <Route path="/members" element={<MembersHub />} />
         <Route path="/members/:id" element={<MemberDetail />} />
-        <Route path="/classes" element={<Classes />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/classes" element={<ClassesHub />} />
+        <Route path="/settings" element={<SettingsHub />} />
         <Route path="/account" element={<StaffAccount />} />
-        
-        {/* Legacy route redirect */}
-        <Route path="/coach" element={<Coach />} />
+
+        {/* Legacy route redirects for backwards compatibility */}
+        <Route
+          path="/schedule"
+          element={<Navigate to="/classes?tab=schedule" replace />}
+        />
+        <Route
+          path="/attendance"
+          element={<Navigate to="/members?tab=attendance" replace />}
+        />
+        <Route
+          path="/billing"
+          element={<Navigate to="/settings?tab=billing" replace />}
+        />
+        <Route
+          path="/my-classes"
+          element={<Navigate to="/classes?tab=my-classes" replace />}
+        />
+        <Route
+          path="/coach"
+          element={<Navigate to="/classes?tab=my-classes" replace />}
+        />
       </Route>
     </Routes>
   );

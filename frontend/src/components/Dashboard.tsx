@@ -22,6 +22,7 @@
  */
 
 import { useDevRole } from "../lib/devRoleMode";
+import { useCurrentUser, getUserDisplayName } from "../lib/auth/currentUser";
 import WidgetCard from "./WidgetCard";
 
 // Mock data for development - replace with Supabase queries
@@ -58,7 +59,20 @@ const mockData = {
 
 export default function Dashboard() {
   const { viewRole } = useDevRole();
+  const { user } = useCurrentUser();
   const isOwner = viewRole === "owner";
+  const isCoach = viewRole === "coach";
+
+  // Get coach's name for filtering classes
+  const coachName = isCoach ? getUserDisplayName(user) : null;
+
+  // Filter classes by coach if viewing as coach
+  const displayedClasses =
+    isCoach && coachName
+      ? mockData.upcomingClasses.filter(
+          (classItem) => classItem.instructor === coachName
+        )
+      : mockData.upcomingClasses;
 
   return (
     <div className="container mx-auto px-4 py-6 md:py-8">
@@ -158,7 +172,7 @@ export default function Dashboard() {
       )}
 
       {/* Upcoming Classes Table */}
-      <WidgetCard title="Upcoming Classes">
+      <WidgetCard title={isCoach ? "My Upcoming Classes" : "Upcoming Classes"}>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -175,22 +189,30 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {mockData.upcomingClasses.map((classItem) => (
-                <tr
-                  key={classItem.id}
-                  className="border-b border-gray-800 hover:bg-gray-900 transition-colors"
-                >
-                  <td className="py-3 px-2 text-white text-sm md:text-base">
-                    {classItem.name}
-                  </td>
-                  <td className="py-3 px-2 text-[--color-neutral-gray] text-sm md:text-base">
-                    {classItem.time}
-                  </td>
-                  <td className="py-3 px-2 text-[--color-neutral-gray] text-sm md:text-base">
-                    {classItem.instructor}
+              {displayedClasses.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-8 text-center text-gray-500">
+                    No upcoming classes
                   </td>
                 </tr>
-              ))}
+              ) : (
+                displayedClasses.map((classItem) => (
+                  <tr
+                    key={classItem.id}
+                    className="border-b border-gray-800 hover:bg-gray-900 transition-colors"
+                  >
+                    <td className="py-3 px-2 text-white text-sm md:text-base">
+                      {classItem.name}
+                    </td>
+                    <td className="py-3 px-2 text-[--color-neutral-gray] text-sm md:text-base">
+                      {classItem.time}
+                    </td>
+                    <td className="py-3 px-2 text-[--color-neutral-gray] text-sm md:text-base">
+                      {classItem.instructor}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

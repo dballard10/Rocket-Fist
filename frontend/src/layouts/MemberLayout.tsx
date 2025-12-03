@@ -8,7 +8,7 @@
  * @roles member (gym members only)
  *
  * @features
- * - Simplified navigation (Home, Schedule, Membership, Account)
+ * - Simplified navigation (Dashboard, Classes, Settings)
  * - Fixed top header with logo and desktop navigation
  * - Mobile-first bottom navigation with icon highlights
  * - Dev mode indicator for role switching during development
@@ -17,8 +17,8 @@
  * @example
  * // Used in App.tsx as the wrapper for all member routes
  * <Route element={<MemberLayout />}>
- *   <Route path="/" element={<MemberHome />} />
- *   <Route path="/schedule" element={<MemberSchedule />} />
+ *   <Route path="/" element={<MemberDashboard />} />
+ *   <Route path="/schedule" element={<MemberClasses />} />
  * </Route>
  */
 
@@ -27,39 +27,28 @@ import { useCurrentUser } from "../lib/auth/currentUser";
 import { isDeveloperUser } from "../lib/auth/devGuard";
 import { useDevRole, getRoleInfo } from "../lib/devRoleMode";
 import DevRoleSwitcherSheet from "../components/dev/DevRoleSwitcherSheet";
-import {
-  IconHome,
-  IconCalendar,
-  IconIdBadge2,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconHome, IconCalendar, IconSettings } from "@tabler/icons-react";
 
 /**
  * Navigation items for the member portal.
  * All items are accessible to all gym members.
  *
  * Routes:
- * - / (Home): QR check-in code, next class, quick actions
+ * - / (Dashboard): QR check-in code, next class, quick actions
  * - /schedule: Browse and book classes
- * - /membership: View membership status and plan details
- * - /account: Personal account settings
+ * - /settings: Account and membership management (with tabs)
  */
 const navItems = [
-  { path: "/", label: "Home", icon: <IconHome size={20} stroke={1.5} /> },
+  { path: "/", label: "Dashboard", icon: <IconHome size={20} stroke={1.5} /> },
   {
     path: "/schedule",
-    label: "Schedule",
+    label: "Classes",
     icon: <IconCalendar size={20} stroke={1.5} />,
   },
   {
-    path: "/membership",
-    label: "Membership",
-    icon: <IconIdBadge2 size={20} stroke={1.5} />,
-  },
-  {
-    path: "/account",
-    label: "Account",
-    icon: <IconUser size={20} stroke={1.5} />,
+    path: "/settings",
+    label: "Settings",
+    icon: <IconSettings size={20} stroke={1.5} />,
   },
 ];
 
@@ -95,12 +84,12 @@ export default function MemberLayout() {
                 <img
                   src="/logos/rocket-fist-logo.png"
                   alt="Rocket-Fist"
-                  className="w-12 h-12"
+                  className="w-16 h-16"
                 />
                 <img
                   src="/logos/rocket-fist-title.png"
                   alt="Rocket-Fist"
-                  className="w-20 h-20 hidden sm:block"
+                  className="w-24 h-24 hidden sm:block"
                 />
               </Link>
 

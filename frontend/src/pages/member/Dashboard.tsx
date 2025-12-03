@@ -1,6 +1,6 @@
 /**
- * @file Home.tsx (Member)
- * @description Member portal home/dashboard page. The primary landing page for
+ * @file Dashboard.tsx (Member)
+ * @description Member portal dashboard page. The primary landing page for
  * gym members featuring their check-in code, upcoming class, and quick actions.
  * Designed for mobile-first use when members arrive at the gym.
  *
@@ -31,14 +31,14 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { IconFlame } from "@tabler/icons-react";
 import Button from "../../components/ui/Button";
 
-// Mock data for member home - replace with authenticated user data
+// Mock data for member dashboard - replace with authenticated user data
 const mockMemberData = {
   name: "Chris Martinez",
   memberSince: "March 2024",
   plan: "Unlimited Monthly",
+  lastCheckin: "December 10, 2024",
   nextClass: {
     name: "All-Levels BJJ",
     time: "12:00 PM Today",
@@ -88,7 +88,7 @@ const QRCodePlaceholder = () => (
   </div>
 );
 
-export default function MemberHome() {
+export default function MemberDashboard() {
   const [showQR, setShowQR] = useState(true);
 
   return (
@@ -99,7 +99,7 @@ export default function MemberHome() {
           Welcome back, {mockMemberData.name.split(" ")[0]}!
         </h1>
         <p className="text-gray-400">
-          Member since {mockMemberData.memberSince}
+          Last Checkin on {mockMemberData.lastCheckin}
         </p>
       </div>
 
@@ -197,11 +197,11 @@ export default function MemberHome() {
             </svg>
           </div>
           <h3 className="font-semibold text-white">Book Class</h3>
-          <p className="text-sm text-gray-500 mt-1">View schedule</p>
+          <p className="text-sm text-gray-500 mt-1">Browse classes</p>
         </Link>
 
         <Link
-          to="/membership"
+          to="/settings?tab=membership"
           className="bg-[--color-background-dark] rounded-xl border border-gray-800 p-5 hover:border-[--color-primary-red]/50 transition-colors group"
         >
           <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-3 group-hover:bg-emerald-500/20 transition-colors">

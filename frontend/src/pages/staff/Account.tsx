@@ -1,12 +1,12 @@
 /**
- * @file Account.tsx (Staff)
- * @description Staff account settings page. Allows staff members to view and edit
+ * @file Settings.tsx (Staff)
+ * @description Staff settings settings page. Allows staff members to view and edit
  * their profile information, manage security settings, and configure notification
  * preferences.
  *
  * @portal Staff
  * @roles owner, coach, employee (all staff members)
- * @route /account
+ * @route /settings
  *
  * @features
  * - Profile section:
@@ -21,19 +21,19 @@
  *   - Class reminder toggle
  *
  * @note
- * This is the STAFF version of the account page.
- * Members have a separate account page at pages/member/Account.tsx
+ * This is the STAFF version of the settings page.
+ * Members have a separate settings page at pages/member/Settings.tsx
  *
  * @data
  * - Uses useCurrentUser hook for user data
  * - Uses useDevRole for role context
  */
 
-import { useState } from 'react';
-import { useCurrentUser, getUserDisplayName } from '../../lib/auth/currentUser';
-import { useDevRole, getRoleInfo } from '../../lib/devRoleMode';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
+import { useState } from "react";
+import { useCurrentUser, getUserDisplayName } from "../../lib/auth/currentUser";
+import { useDevRole, getRoleInfo } from "../../lib/devRoleMode";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/Input";
 
 export default function StaffAccount() {
   const { user } = useCurrentUser();
@@ -42,14 +42,13 @@ export default function StaffAccount() {
   const [isEditing, setIsEditing] = useState(false);
 
   const displayName = getUserDisplayName(user);
-  const email = user?.email || 'staff@rocketfist.com';
+  const email = user?.email || "staff@rocketfist.com";
 
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-white">Account</h1>
-        <p className="text-gray-400 mt-1">Manage your account settings</p>
       </div>
 
       <div className="max-w-2xl space-y-6">
@@ -61,9 +60,13 @@ export default function StaffAccount() {
                 {displayName.charAt(0).toUpperCase()}
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">{displayName}</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  {displayName}
+                </h2>
                 <p className="text-gray-400">{email}</p>
-                <span className={`inline-block mt-2 px-2 py-1 rounded text-xs font-medium ${roleInfo.bgColor} ${roleInfo.color}`}>
+                <span
+                  className={`inline-block mt-2 px-2 py-1 rounded text-xs font-medium ${roleInfo.bgColor} ${roleInfo.color}`}
+                >
                   {roleInfo.label}
                 </span>
               </div>
@@ -73,7 +76,7 @@ export default function StaffAccount() {
               size="sm"
               onClick={() => setIsEditing(!isEditing)}
             >
-              {isEditing ? 'Cancel' : 'Edit'}
+              {isEditing ? "Cancel" : "Edit"}
             </Button>
           </div>
 
@@ -124,7 +127,9 @@ export default function StaffAccount() {
             <div className="flex items-center justify-between py-3 border-b border-gray-800">
               <div>
                 <p className="text-white font-medium">Password</p>
-                <p className="text-sm text-gray-500">Last changed 30 days ago</p>
+                <p className="text-sm text-gray-500">
+                  Last changed 30 days ago
+                </p>
               </div>
               <Button variant="secondary" size="sm">
                 Change Password
@@ -132,8 +137,12 @@ export default function StaffAccount() {
             </div>
             <div className="flex items-center justify-between py-3">
               <div>
-                <p className="text-white font-medium">Two-Factor Authentication</p>
-                <p className="text-sm text-gray-500">Add an extra layer of security</p>
+                <p className="text-white font-medium">
+                  Two-Factor Authentication
+                </p>
+                <p className="text-sm text-gray-500">
+                  Add an extra layer of security
+                </p>
               </div>
               <Button variant="secondary" size="sm">
                 Enable
@@ -151,7 +160,9 @@ export default function StaffAccount() {
             <label className="flex items-center justify-between py-2 cursor-pointer">
               <div>
                 <p className="text-white">Email Notifications</p>
-                <p className="text-sm text-gray-500">Receive updates via email</p>
+                <p className="text-sm text-gray-500">
+                  Receive updates via email
+                </p>
               </div>
               <input
                 type="checkbox"
@@ -162,7 +173,9 @@ export default function StaffAccount() {
             <label className="flex items-center justify-between py-2 cursor-pointer">
               <div>
                 <p className="text-white">Class Reminders</p>
-                <p className="text-sm text-gray-500">Get reminded about upcoming classes</p>
+                <p className="text-sm text-gray-500">
+                  Get reminded about upcoming classes
+                </p>
               </div>
               <input
                 type="checkbox"
@@ -176,5 +189,3 @@ export default function StaffAccount() {
     </div>
   );
 }
-
-

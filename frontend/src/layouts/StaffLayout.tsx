@@ -114,23 +114,17 @@ interface NavItem {
  * Navigation configuration with role-based visibility.
  * Each item specifies which staff roles can see and access it.
  *
- * Role access summary:
- * - owner: Full access (Dashboard, Members, Classes, Schedule, Attendance, Billing, Settings, Account)
- * - coach: My Classes, Members, Schedule, Attendance, Account
- * - employee: Check-ins, Members, Classes, Schedule, Account
+ * CONSOLIDATED NAVIGATION (reduced navbar clutter):
+ * - owner: Dashboard, Members (w/ Attendance tab), Classes (w/ Schedule tab), Settings (w/ Billing, Gym, Account tabs)
+ * - coach: Dashboard, Classes (w/ My Classes, Schedule tabs), Members (w/ Attendance tab), Settings
+ * - employee: Check-ins, Members, Classes (w/ Schedule tab), Settings
  */
 const navItems: NavItem[] = [
   {
     path: "/",
     label: "Dashboard",
     icon: <DashboardIcon />,
-    roles: ["owner"],
-  },
-  {
-    path: "/my-classes",
-    label: "My Classes",
-    icon: <MyClassesIcon />,
-    roles: ["coach"],
+    roles: ["owner", "coach"],
   },
   {
     path: "/check-ins",
@@ -148,25 +142,7 @@ const navItems: NavItem[] = [
     path: "/classes",
     label: "Classes",
     icon: <ClassesIcon />,
-    roles: ["owner", "employee"],
-  },
-  {
-    path: "/schedule",
-    label: "Schedule",
-    icon: <ScheduleIcon />,
-    roles: ["owner", "coach", "employee"],
-  },
-  {
-    path: "/attendance",
-    label: "Attendance",
-    icon: <AttendanceIcon />,
-    roles: ["owner", "coach"],
-  },
-  {
-    path: "/billing",
-    label: "Billing",
-    icon: <BillingIcon />,
-    roles: ["owner"],
+    roles: ["owner", "employee", "coach"],
   },
   {
     path: "/settings",
@@ -176,9 +152,9 @@ const navItems: NavItem[] = [
   },
   {
     path: "/account",
-    label: "Account",
+    label: "Settings",
     icon: <AccountIcon />,
-    roles: ["owner", "coach", "employee"],
+    roles: ["coach", "employee"],
   },
 ];
 
@@ -249,7 +225,7 @@ export default function StaffLayout() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
+            <nav className="hidden xl:flex items-center space-x-1">
               {filteredNavItems.map((item) => (
                 <Link
                   key={item.path}
@@ -273,7 +249,7 @@ export default function StaffLayout() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-gray-400 hover:text-white"
+              className="xl:hidden p-2 text-gray-400 hover:text-white"
             >
               {isMobileMenuOpen ? (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -290,7 +266,7 @@ export default function StaffLayout() {
 
         {/* Mobile Dropdown Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-800 bg-black/80 backdrop-blur-md">
+          <div className="xl:hidden border-t border-gray-800 bg-black/80 backdrop-blur-md">
             <nav className="container mx-auto px-4 py-3 space-y-1">
               {filteredNavItems.map((item) => (
                 <Link
@@ -317,12 +293,12 @@ export default function StaffLayout() {
       </header>
 
       {/* Main Content */}
-      <main className="pt-16 pb-16 md:pb-0">
+      <main className="pt-16 pb-16 xl:pb-0 min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
         <Outlet />
       </main>
 
       {/* Mobile Bottom Navigation - Fixed */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-black/80 backdrop-blur-md border-t border-gray-800 safe-area-inset-bottom">
+      <nav className="xl:hidden fixed bottom-0 inset-x-0 z-50 bg-black/80 backdrop-blur-md border-t border-gray-800 safe-area-inset-bottom">
         <div className="flex items-center justify-around py-2">
           {bottomNavItems.map((item) => (
             <Link

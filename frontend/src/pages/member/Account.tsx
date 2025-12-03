@@ -293,7 +293,7 @@ export default function MemberAccount() {
                 <div>
                   <p className="text-white">New Class Alerts</p>
                   <p className="text-sm text-gray-500">
-                    When new classes are added to the schedule
+                    When new classes are added
                   </p>
                 </div>
                 <input

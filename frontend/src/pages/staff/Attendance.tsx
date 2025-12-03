@@ -27,9 +27,9 @@
  * - Currently uses mock data (to be replaced with Supabase 'check_ins' table)
  */
 
-import { useState } from 'react';
-import { useDevRole } from '../../lib/devRoleMode';
-import WidgetCard from '../../components/WidgetCard';
+import { useState } from "react";
+import { useDevRole } from "../../lib/devRoleMode";
+import WidgetCard from "../../components/WidgetCard";
 
 // Mock attendance data
 const mockAttendanceStats = {
@@ -40,49 +40,86 @@ const mockAttendanceStats = {
 };
 
 const mockRecentCheckins = [
-  { id: '1', memberName: 'Chris Martinez', className: 'Beginner BJJ', time: '9:15 AM' },
-  { id: '2', memberName: 'Jordan Lee', className: 'Beginner BJJ', time: '9:12 AM' },
-  { id: '3', memberName: 'Morgan Chen', className: 'Beginner BJJ', time: '9:08 AM' },
-  { id: '4', memberName: 'Taylor Brown', className: 'Beginner BJJ', time: '9:05 AM' },
-  { id: '5', memberName: 'Alex Rivera', className: 'Beginner BJJ', time: '9:02 AM' },
+  {
+    id: "1",
+    memberName: "Chris Martinez",
+    className: "Beginner BJJ",
+    time: "9:15 AM",
+  },
+  {
+    id: "2",
+    memberName: "Jordan Lee",
+    className: "Beginner BJJ",
+    time: "9:12 AM",
+  },
+  {
+    id: "3",
+    memberName: "Morgan Chen",
+    className: "Beginner BJJ",
+    time: "9:08 AM",
+  },
+  {
+    id: "4",
+    memberName: "Taylor Brown",
+    className: "Beginner BJJ",
+    time: "9:05 AM",
+  },
+  {
+    id: "5",
+    memberName: "Alex Rivera",
+    className: "Beginner BJJ",
+    time: "9:02 AM",
+  },
 ];
 
 export default function Attendance() {
   const { viewRole } = useDevRole();
-  const isOwner = viewRole === 'owner';
-  const isCoach = viewRole === 'coach';
+  const isOwner = viewRole === "owner";
+  const isCoach = viewRole === "coach";
 
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-white">Attendance</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-white">
+          Attendance
+        </h1>
         <p className="text-gray-400 mt-1">
-          {isCoach ? 'Track attendance for your classes' : 'Overview of gym attendance'}
+          {isCoach
+            ? "Track attendance for your classes"
+            : "Overview of gym attendance"}
         </p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <WidgetCard title="Today">
-          <p className="text-3xl font-bold text-white">{mockAttendanceStats.today}</p>
+          <p className="text-3xl font-bold text-white">
+            {mockAttendanceStats.today}
+          </p>
           <p className="text-xs text-gray-500 mt-1">check-ins</p>
         </WidgetCard>
-        
+
         <WidgetCard title="This Week">
-          <p className="text-3xl font-bold text-white">{mockAttendanceStats.thisWeek}</p>
+          <p className="text-3xl font-bold text-white">
+            {mockAttendanceStats.thisWeek}
+          </p>
           <p className="text-xs text-gray-500 mt-1">check-ins</p>
         </WidgetCard>
-        
+
         {isOwner && (
           <>
             <WidgetCard title="This Month">
-              <p className="text-3xl font-bold text-white">{mockAttendanceStats.thisMonth}</p>
+              <p className="text-3xl font-bold text-white">
+                {mockAttendanceStats.thisMonth}
+              </p>
               <p className="text-xs text-gray-500 mt-1">check-ins</p>
             </WidgetCard>
-            
+
             <WidgetCard title="Avg Per Class">
-              <p className="text-3xl font-bold text-white">{mockAttendanceStats.avgPerClass}</p>
+              <p className="text-3xl font-bold text-white">
+                {mockAttendanceStats.avgPerClass}
+              </p>
               <p className="text-xs text-gray-500 mt-1">members</p>
             </WidgetCard>
           </>
@@ -93,7 +130,10 @@ export default function Attendance() {
       <WidgetCard title="Recent Check-ins">
         <div className="divide-y divide-gray-800">
           {mockRecentCheckins.map((checkin) => (
-            <div key={checkin.id} className="py-3 flex items-center justify-between">
+            <div
+              key={checkin.id}
+              className="py-3 flex items-center justify-between"
+            >
               <div>
                 <p className="text-white font-medium">{checkin.memberName}</p>
                 <p className="text-sm text-gray-500">{checkin.className}</p>
@@ -106,5 +146,3 @@ export default function Attendance() {
     </div>
   );
 }
-
-
